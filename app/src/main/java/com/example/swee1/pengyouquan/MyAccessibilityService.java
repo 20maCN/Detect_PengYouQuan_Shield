@@ -20,6 +20,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.swee1.pengyouquan.MainActivity.saveExistingData;
+
 /**
  * Created by swee1 on 2017/5/11.
  */
@@ -48,8 +50,10 @@ public class MyAccessibilityService extends AccessibilityService {
                 AccessibilityNodeInfo rootNodeInfo = getRootInActiveWindow();
                 if ( rootNodeInfo != null ) {
                     try {
-                        helper = new myDB(this);
-                        helper.delete();
+                        if ( saveExistingData == false ) {
+                            helper = new myDB(this);
+                            helper.delete();
+                        }
                         test(rootNodeInfo);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -128,11 +132,13 @@ public class MyAccessibilityService extends AccessibilityService {
             }
             for ( int i = 0; i < friendList.size(); i++ ) {
                 AccessibilityNodeInfo clickNode = friendList.get(i);
-                clickNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                Thread.sleep(jumpTime);
-                jumpToDetail();
-                pressBack();
-                Thread.sleep(jumpTime);
+                if ( clickNode != null ) {
+                    clickNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    Thread.sleep(jumpTime);
+                    jumpToDetail();
+                    pressBack();
+                    Thread.sleep(jumpTime);
+                }
             }
 
             listView.performAction( AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
