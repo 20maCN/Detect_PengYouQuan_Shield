@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                                 "3 结果列表中会显示限制天数和疑似屏蔽的好友列表，疑似屏蔽是指发朋友圈少于两条的好友\n" +
                                 "4 请在扫描结束后关闭辅助功能选项\n" +
                                 "5 如果开启服务后没有反应，可尝试重启手机\n" +
-                                "6 如果觉得app不错，记得来github上给star喔。微信测试版本：6.5.8\n" +
+                                "6 如果觉得app不错，记得来github上给star喔。微信测试版本：6.5.10\n" +
                                 "7 后期会在github上更新，地址：https://github.com/PP8818/Detect_PengYouQuan_Shield" )
                         .show();//在按键响应事件中显示此对话框
             }

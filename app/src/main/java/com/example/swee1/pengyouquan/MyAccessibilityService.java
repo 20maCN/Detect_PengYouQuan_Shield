@@ -31,6 +31,14 @@ public class MyAccessibilityService extends AccessibilityService {
     private myDB helper;
     private AccessibilityNodeInfo nodeInfoTmp;
     private int jumpTime = 700;
+    private String tongXunLuId = "com.tencent.mm:id/bw3";
+    private String listViewId = "com.tencent.mm:id/hv";
+    private String scanOverId = "com.tencent.mm:id/aft";
+    private String backButtonId = "com.tencent.mm:id/h6";
+    private String friendNicknameId = "android:id/text1";
+    private String dayLimitId = "com.tencent.mm:id/cuo";
+    private String shieldId = "com.tencent.mm:id/a1s";
+
     @Override
     protected void onServiceConnected() {
         //当启动服务的时候就会被调用
@@ -41,10 +49,11 @@ public class MyAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         String className = event.getClassName().toString();
+//        Log.d("className",className);
         if (className.equals("com.tencent.mm.ui.LauncherUI") && !mutex) {
             mutex = true;
             Log.d("yeah","进入wx");
-            if (findElementByID("com.tencent.mm:id/bue",event,1)) {
+            if (findElementByID(tongXunLuId,event,1)) {
                 Log.d("yeah","点击通讯录");
                 nodeInfoTmp.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 AccessibilityNodeInfo rootNodeInfo = getRootInActiveWindow();
@@ -67,7 +76,7 @@ public class MyAccessibilityService extends AccessibilityService {
     private void pressBack() throws InterruptedException {
         Thread.sleep(jumpTime);
         AccessibilityNodeInfo rootNodeInfo = getRootInActiveWindow();
-        clickNodeByID(rootNodeInfo,"com.tencent.mm:id/h3");
+        clickNodeByID(rootNodeInfo,backButtonId);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -82,17 +91,17 @@ public class MyAccessibilityService extends AccessibilityService {
     private void checkPictures() throws InterruptedException {
         AccessibilityNodeInfo rootNodeInfo = getRootInActiveWindow();
         if ( rootNodeInfo != null ) {
-            if ( rootNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a0k").size() > 0 ) {
-                String friendID =  rootNodeInfo.findAccessibilityNodeInfosByViewId("android:id/text1").get(0).getText().toString();
+            if ( rootNodeInfo.findAccessibilityNodeInfosByViewId(shieldId).size() > 0 ) {
+                String friendID =  rootNodeInfo.findAccessibilityNodeInfosByViewId(friendNicknameId).get(0).getText().toString();
                 String description = "疑似屏蔽了你";
                 helper = new myDB(this);
                 if (!helper.ifHasData(friendID)) {
                     helper.insert2DB(helper.numOfData()+1,friendID,description);
                 }
             }
-            else if ( rootNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/crw").size() > 0 ) {
-                String friendID =  rootNodeInfo.findAccessibilityNodeInfosByViewId("android:id/text1").get(0).getText().toString();
-                String description =  rootNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/crw").get(0).getText().toString();
+            else if ( rootNodeInfo.findAccessibilityNodeInfosByViewId(dayLimitId).size() > 0 ) {
+                String friendID =  rootNodeInfo.findAccessibilityNodeInfosByViewId(friendNicknameId).get(0).getText().toString();
+                String description =  rootNodeInfo.findAccessibilityNodeInfosByViewId(dayLimitId).get(0).getText().toString();
                 helper = new myDB(this);
                 if ( !helper.ifHasData(friendID)) {
                     helper.insert2DB(helper.numOfData()+1,friendID,description);
@@ -122,8 +131,8 @@ public class MyAccessibilityService extends AccessibilityService {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void test(AccessibilityNodeInfo rootNodeInfo) throws InterruptedException {
-        if ( rootNodeInfo != null && rootNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hy").size() > 0 ) {
-            AccessibilityNodeInfo listView =  rootNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hy").get(0);
+        if ( rootNodeInfo != null && rootNodeInfo.findAccessibilityNodeInfosByViewId(listViewId).size() > 0 ) {
+            AccessibilityNodeInfo listView =  rootNodeInfo.findAccessibilityNodeInfosByViewId(listViewId).get(0);
             int len = listView.getChildCount();
             List<AccessibilityNodeInfo> friendList = new ArrayList<>();
             for ( int i = 0; i < len; i++ ) {
@@ -142,7 +151,7 @@ public class MyAccessibilityService extends AccessibilityService {
             }
 
             listView.performAction( AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
-            if ( rootNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ae8").size()> 0 ) {
+            if ( rootNodeInfo.findAccessibilityNodeInfosByViewId(scanOverId).size()> 0 ) {
                 Toast.makeText(this, "扫描完毕，请关闭服务后到主界面查看结果", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);//跳转到辅助功能设置页
                 startActivity(intent);
